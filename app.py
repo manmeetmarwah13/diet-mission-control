@@ -32,7 +32,7 @@ nutrients = {
         "Vitamin A": {"current": 700, "target": 900, "unit": "mcg", "type": "core"},
         "Vitamin B12": {"current": 1.2, "target": 2.4, "unit": "mcg", "type": "conditional"},
         "Vitamin D": {"current": 8500, "target": 4000, "unit": "IU", "note": "(Weekly dose averaged)", "type": "core"},
-        "Omega-3": {"current": 660, "target": 1000, "unit": "mg", "type": "deficiency"},
+        "Omega-3": {"current": 750, "target": 1000, "unit": "mg", "type": "deficiency"},
         "Iron": {"current": 11, "target": 18, "unit": "mg", "type": "conditional"},
         "Calcium": {"current": 800, "target": 1000, "unit": "mg", "type": "core"},
         "Zinc": {"current": 9, "target": 12, "unit": "mg", "type": "core"},
