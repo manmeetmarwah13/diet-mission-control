@@ -1,33 +1,30 @@
 import streamlit as st
-import pandas as pd
 
 # --- SYSTEM CONFIG ---
 st.set_page_config(page_title="90KG Mission Control", page_icon="⚡", layout="wide")
 
-# --- UI OVERRIDE (Fixes Blackout/Visibility Issues) ---
+# --- STYLING (Matching Blue Gradient Progress Bars) ---
 st.markdown("""
     <style>
     .stApp { background-color: #f8f9fa; color: #1e1e1e; }
     [data-testid="stMetric"] {
         background-color: #ffffff; border: 1px solid #dee2e6;
-        padding: 15px; border-radius: 12px; box-shadow: 2px 2px 8px rgba(0,0,0,0.05);
+        padding: 15px; border-radius: 12px;
     }
-    /* Animated Progress Bar Styling */
     .stProgress > div > div > div > div {
-        background-image: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
+        background-image: linear-gradient(to right, #00f2fe 0%, #4facfe 100%);
     }
     </style>
     """, unsafe_allow_html=True)
 
-# --- NIN & USDA BENCHMARK ENGINE ---
-# Benchmarks adjusted for 114kg male / 6ft height
+# --- NUTRITION DATA ENGINE ---
 nutrients = {
     "Macronutrients": {
-        "Calories": {"current": 1625, "target": 2600, "unit": "kcal", "status": "Deficit"},
-        "Protein": {"current": 140, "target": 140, "unit": "g", "status": "Optimal"},
-        "Fats": {"current": 60, "target": 70, "unit": "g", "status": "Hormone Support"},
-        "Carbs": {"current": 80, "target": 200, "unit": "g", "status": "Low-Carb Mode"},
-        "Fiber": {"current": 25, "target": 30, "unit": "g", "status": "Digestive Strength"}
+        "Calories": {"current": 1625, "target": 2600, "unit": "kcal"},
+        "Protein": {"current": 140, "target": 140, "unit": "g"},
+        "Fats": {"current": 60, "target": 70, "unit": "g"},
+        "Fiber": {"current": 25, "target": 30, "unit": "g"},
+        "Carbs": {"current": 80, "target": 200, "unit": "g"}
     },
     "Micronutrients": {
         "Vitamin C": {"current": 90, "target": 90, "unit": "mg"},
@@ -40,71 +37,90 @@ nutrients = {
 
 # --- HEADER ---
 st.title("🚀 MISSION CONTROL: 114kg ➔ 90kg")
-st.caption("Standardized against USDA & NIN Benchmarks for 6ft/114kg Male")
 st.divider()
 
-# --- TABS ---
+# --- NAVIGATION TABS ---
 tab1, tab2, tab3 = st.tabs(["📊 LIVE DASHBOARD", "🍱 MEAL VAULT", "🕒 TIME-STREAM"])
 
 with tab1:
-    st.sidebar.header("Daily Telemetry")
-    water = st.sidebar.slider("Water Intake (L)", 0.0, 5.0, 4.16)
-    
-    # ROW 1: TOP METRICS (THE 4TH COLUMN INCLUDED)
+    # ROW 1: TOP METRICS (Added Fiber Intake here as requested)
     c1, c2, c3, c4 = st.columns(4)
-    c1.metric("Current Calories", f"{nutrients['Macronutrients']['Calories']['current']} kcal", "-975 kcal Deficit")
-    c2.metric("Protein Intake", f"{nutrients['Macronutrients']['Protein']['current']}g", "🎯 100% Target")
-    c3.metric("Burn Status", "Fat Oxidation", "🔥 Active")
-    
-    with c4:
-        st.write("**💎 Micronutrient Gaps**")
-        st.caption("Based on NIN/USDA Requirements")
-        st.write(f"• **Zinc:** -3mg")
-        st.write(f"• **Magnesium:** -150mg")
-        st.write(f"• **Omega-3:** -340mg")
+    c1.metric("Calories", "1625 kcal", "-975 vs TDEE")
+    c2.metric("Protein", "140g", "🎯 Target Hit")
+    c3.metric("Fiber Intake", "25g", "Target: 30g")
+    c4.metric("Burn Status", "Fat Oxidation", "🔥 Active")
 
-    # ROW 2: ANIMATED PROGRESS BARS (Style of Image 14)
-    st.write("### 📈 Nutrition Dashboard")
+    st.write("### 📈 Nutrient Saturation")
+    col_left, col_right = st.columns(2)
     
-    for category, items in nutrients.items():
-        st.markdown(f"#### {category}")
-        for item, data in items.items():
-            col_text, col_bar = st.columns([1, 3])
-            with col_text:
-                st.write(f"**{item}**")
-                st.caption(f"{data['current']}/{data['target']} {data['unit']}")
-            with col_bar:
-                # Calculate progress and determine color logic
-                progress = min(data['current'] / data['target'], 1.0)
-                st.progress(progress)
-        st.write("") # Padding
+    with col_left:
+        st.markdown("**Core Macros**")
+        for item, data in nutrients["Macronutrients"].items():
+            progress = min(data['current'] / data['target'], 1.0)
+            st.write(f"{item} ({data['current']}/{data['target']} {data['unit']})")
+            st.progress(progress)
+
+    with col_right:
+        st.markdown("**💎 Mineral & Vitamin Matrix**")
+        # Integrated directly into the Live Dashboard column as requested
+        st.caption("Daily Bio-Optimization Status")
+        m1, m2 = st.columns(2)
+        with m1:
+            st.write("• **Probiotics:** 260 Cr")
+            st.write("• **Ashwagandha:** 135mg")
+            st.write("• **Magnesium:** 250mg")
+        with m2:
+            st.write("• **Omega-3:** 660mg")
+            st.write("• **Vitamin D3:** 60k IU (W)")
+            st.write("• **Vitamin C:** 90mg")
 
 with tab2:
-    st.subheader("🍱 Tactical Nutrition (Click to Expand)")
-    m1, m2 = st.columns(2)
-    with m1:
-        with st.expander("🍎 LIGHT MEAL (2:30 PM)"):
-            st.write("• 1 Apple + 1 Banana\n• 5 Almonds + 1 Walnut\n• Good Monk Sachet #1")
-    with m2:
-        with st.expander("🍗 MAIN LOAD (9:00 PM)"):
-            st.write("• 400g Chicken (15g Butter)\n• 150g Dahi + 3 Eggs\n• 1 Roti + Cucumber\n• Good Monk Sachet #2")
+    st.subheader("🍱 Tactical Nutrition")
+    # Clean 1-line food entries as requested
+    col_a, col_b = st.columns(2)
+    
+    with col_a:
+        with st.expander("🍎 FIRST MEAL (02:30 PM)"):
+            st.write("1 Apple + 1 Banana + 5 Almonds + 1 Walnut")
+            
+        with st.expander("🥛 PRE-MEAL (08:30 PM)"):
+            st.write("1 Spoon Flax Seeds + 250ml Water")
 
-    st.write("### 💎 Mineral & Vitamin Matrix")
-    n1, n2, n3, n4 = st.columns(4)
-    n1.write("**Probiotics:** 260 Crore")
-    n2.write("**Ashwagandha:** 135mg")
-    n3.write("**Vitamin D3:** 60k IU (Weekly)")
-    n4.write("**Vitamin C:** 32.4mg (Supp)")
+    with col_b:
+        with st.expander("🍗 SECOND MEAL (09:00 PM)"):
+            st.write("400g Chicken (15g Butter) + 150g Dahi + 3 Eggs + 1 Roti + 1 Cucumber")
+            st.info("Includes Good Monk Sachet #1 & #2")
+
+        with st.expander("🥗 ALT SECOND MEAL (09:00 PM)"):
+            st.write("400g Chicken (5g Butter) + 150g Dahi + 3 Eggs + Cucumber + Sautéed Veggies (Onion/Capsicum/Beans/Carrot) + 50g Cauliflower")
+            st.info("Includes Good Monk Sachet #1 & #2")
 
 with tab3:
     st.subheader("🕒 The 1PM - 4AM Cycle Progress")
-    # Time-stream progress bars
-    tasks = [("01:00 PM", "Wake & Hydrate", 1.0), ("02:30 PM", "Light Meal", 0.8), 
-             ("09:00 PM", "Main Load", 0.4), ("01:00 AM", "Isabgol Sweep", 0.1)]
-    for time, task, p in tasks:
-        st.write(f"**{time}** | {task}")
-        st.progress(p)
+    # Updated Timeline and Terminology
+    timeline = [
+        ("01:00 PM", "Wake Up", 1.0),
+        ("02:30 PM", "First Meal", 0.85),
+        ("05:00 PM", "Coffee/Tea", 0.70),
+        ("08:30 PM", "Pre-Meal", 0.50),
+        ("09:00 PM", "Second Meal", 0.40),
+        ("10:00 PM", "Vitamins & Minerals", 0.25),
+        ("01:00 AM", "Fibre Intake", 0.10)
+    ]
+    
+    for time, event, prog in timeline:
+        col_t, col_p = st.columns([1, 4])
+        with col_t:
+            st.write(f"**{time}**")
+        with col_p:
+            st.write(event)
+            st.progress(prog)
 
 # --- FOOTER ---
 st.divider()
-st.success(f"✅ System Nominal: {water}L Hydration.")
+st.sidebar.header("Telemetry Input")
+water = st.sidebar.slider("Water Intake (Liters)", 0.0, 6.0, 4.16)
+if water < 4.0:
+    st.sidebar.warning("⚠️ Increase water for high protein processing.")
+else:
+    st.sidebar.success("✅ Hydration Optimal.")
