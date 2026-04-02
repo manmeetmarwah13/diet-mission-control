@@ -1,79 +1,120 @@
 import streamlit as st
 import plotly.graph_objects as go
+from streamlit_lottie import st_lottie
+import requests
 
-# --- PAGE SETUP ---
-st.set_page_config(page_title="90KG Mission Control", page_icon="🚀", layout="wide")
+# --- CONFIG & THEME ---
+st.set_page_config(page_title="Mission Control 90KG", page_icon="⚡", layout="wide")
 
-# --- CUSTOM THEME ---
+def load_lottieurl(url: str):
+    r = requests.get(url)
+    if r.status_code != 200:
+        return None
+    return r.json()
+
+# High-end Animations
+lottie_health = load_lottieurl("https://assets5.lottiefiles.com/packages/lf20_5njp3v83.json") # Heartbeat
+lottie_loading = load_lottieurl("https://assets1.apps.lottiefiles.com/datafiles/bZ97S67Xf0S6Z6G/data.json") # Processing
+
+# --- CUSTOM CSS FOR ANIMATIONS ---
 st.markdown("""
     <style>
-    .main { background-color: #0e1117; color: #ffffff; }
-    div[data-testid="stMetricValue"] { color: #00f2fe; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .stMetaData { animation: fadeIn 2s; }
+    .main { background-color: #0e1117; }
+    div.stButton > button:first-child {
+        background-color: #00f2fe; color: black; border-radius: 20px;
+        transition: all 0.3s ease-in-out;
+    }
+    div.stButton > button:hover { transform: scale(1.05); background-color: #4facfe; }
     </style>
     """, unsafe_allow_html=True)
 
-# --- HEADER ---
-st.title("🚀 MISSION CONTROL: 114kg ➔ 90kg")
-st.subheader("System Status: Fat Oxidation Active")
-
-# --- SIDEBAR LOGS ---
-st.sidebar.header("Daily Telemetry")
-day_type = st.sidebar.selectbox("Current Day Plan", ["Standard (With Roti)", "Alt (Extra Veggies)"])
-water_l = st.sidebar.slider("Water Intake (Liters)", 0.0, 5.0, 2.5)
-steps = st.sidebar.number_input("Step Count", min_value=0, value=1000)
-
-# --- CALCULATED DATA (USDA/ICMR Based) ---
-protein = 141
-fats = 82
-carbs = 87 if day_type == "Standard (With Roti)" else 65
-calories = 1445 if day_type == "Standard (With Roti)" else 1280
-
-# --- TOP METRICS ---
-m1, m2, m3, m4 = st.columns(4)
-m1.metric("Calories", f"{calories} kcal", "-1155 vs TDEE")
-m2.metric("Protein", f"{protein}g", "Target: 140g")
-m3.metric("Carbs", f"{carbs}g", "Low Carb")
-m4.metric("Fats", f"{fats}g", "Hormonal Support")
-
-# --- INTERACTIVE MACRO CHART ---
-st.write("### 📊 Macro Nutrient Distribution")
-fig = go.Figure(data=[go.Pie(
-    labels=['Protein', 'Fats', 'Carbs'], 
-    values=[protein*4, fats*9, carbs*4], 
-    hole=.4,
-    marker_colors=['#00f2fe', '#4facfe', '#71e3ff']
-)])
-fig.update_layout(template="plotly_dark", height=350, margin=dict(l=0, r=0, b=0, t=0))
-st.plotly_chart(fig, use_container_width=True)
-
-# --- THE 1PM - 4AM SCHEDULE ---
-st.write("### 🕒 Daily Execution Cycle")
+# --- HEADER SECTION ---
 with st.container():
-    t1, t2 = st.columns(2)
-    with t1:
-        st.info("**01:00 PM** | 🟢 Wake Up (Hydrate)")
-        st.info("**02:30 PM** | 🍎 Light Meal (Apple, Banana, Nuts)")
-        st.info("**05:00 PM** | ☕ Iced Americano (Fat Burn)")
-        st.info("**08:30 PM** | 🛡️ Flax Seeds Primer")
-    with t2:
-        st.success("**09:00 PM** | 🍗 Main Load (Chicken, Eggs, Dahi)")
-        st.success("**10:00 PM** | 💊 HK Multis + Omega 3")
-        st.success("**01:00 AM** | 🧹 Isabgol (Digestive Sweep)")
-        st.success("**04:00 AM** | 💤 Sleep (Repair Mode)")
+    left, right = st.columns([3, 1])
+    with left:
+        st.title("🚀 MISSION CONTROL: 114kg ➔ 90kg")
+        st.subheader("System Status: Peak Performance Mode")
+    with right:
+        st_lottie(lottie_health, height=100, key="heart")
 
-# --- MICRONUTRIENT RADAR (From your Good Monk Screenshot) ---
-st.write("### 🧬 Bio-Optimization (Good Monk 2x)")
-col_a, col_b, col_c, col_d = st.columns(4)
-col_a.metric("Probiotics", "260 Cr", "Gut Health")
-col_b.metric("Ashwagandha", "135mg", "Stress Control")
-col_c.metric("Brahmi", "40mg", "Focus")
-col_d.metric("Vitamin D3", "60k IU", "Weekly")
+# --- INTERACTIVE DASHBOARD TABS ---
+tab1, tab2, tab3 = st.tabs(["📊 Live Metrics", "🍱 Meal Vault", "🕒 Time-Stream"])
 
-# --- WARNING SYSTEM ---
-st.divider()
-if water_l < 3.5:
-    st.error(f"⚠️ DANGER: Water is {water_l}L. Kidney stress risk with {protein}g protein! Drink up.")
-elif steps < 3000:
-    st.warning(f"⚠️ METABOLIC STALL: Current steps ({steps}) are too low. Aim for 3000 to boost loss.")
+with tab1:
+    # Sidebar Logic moved to metrics
+    st.sidebar.header("Telemetry Input")
+    water = st.sidebar.slider("Water Intake (L)", 0.0, 5.0, 2.5)
+    
+    col1, col2, col3 = st.columns(3)
+    col1.metric("Current Deficit", "-1155 kcal", "🔥 Optimal")
+    col2.metric("Protein Saturation", "141g", "🎯 Goal Met")
+    col3.metric("Ketosis Level", "Moderate", "📈 Increasing")
+
+    # Animated Chart
+    fig = go.Figure(go.Indicator(
+        mode = "gauge+number",
+        value = water,
+        title = {'text': "Hydration Status (Liters)"},
+        gauge = {'axis': {'range': [0, 5]}, 'bar': {'color': "#00f2fe"}}
+    ))
+    fig.update_layout(paper_bgcolor="#0e1117", font={'color': "white"}, height=300)
+    st.plotly_chart(fig, use_container_width=True)
+
+with tab2:
+    st.write("### 🍱 Tactical Nutrition Breakdown")
+    st.write("Click each category to see the precise fuel components.")
+    
+    with st.expander("🍎 LIGHT MEAL (2:30 PM)"):
+        st.write("""
+        * **1 Apple** (Medium)
+        * **1 Banana** (Medium)
+        * **5 Almonds** (Soaked preferred)
+        * **1 Walnut**
+        * **Supplement:** HK Multivitamin + Good Monk Sachet #1
+        """)
+        st.progress(20)
+
+    with st.expander("🍗 MAIN LOAD (9:00 PM)"):
+        st.write("""
+        * **400g Chicken Breast** (Sauteed in 15g Amul Butter)
+        * **150g Amul Dahi** (Curd)
+        * **2 Egg Whites + 1 Whole Egg**
+        * **1 Cucumber** (Sliced)
+        * **1 Roti** (Whole Wheat)
+        * **Supplement:** 2x Omega-3 + Good Monk Sachet #2
+        """)
+        st.progress(85)
+
+    with st.expander("🥦 ALT MAIN LOAD (Veggie Swap)"):
+        st.write("""
+        * **400g Chicken Breast** (15g Butter)
+        * **Sautéed Veggies** (Onion + Capsicum + Beans/Carrot)
+        * **50g Cauliflower** (5g Butter)
+        * **2 Egg Whites + 1 Whole Egg**
+        * **150g Amul Dahi**
+        """)
+        st.progress(75)
+
+with tab3:
+    st.write("### 🕒 The 1PM - 4AM Cycle")
+    # Using a professional vertical timeline aesthetic
+    items = [
+        ("1:00 PM", "🟢 System Wake & Hydrate"),
+        ("2:30 PM", "🍎 Light Fuel Intake"),
+        ("5:00 PM", "☕ Caffeine Spike (Iced Americano)"),
+        ("8:30 PM", "🛡️ Flax Seed Primer"),
+        ("9:00 PM", "🥩 Massive Protein Load"),
+        ("1:00 AM", "🧹 Digestive Sweep (Isabgol)"),
+        ("4:00 AM", "💤 Shutdown & Fat Oxidation")
+    ]
+    for time, event in items:
+        st.write(f"**{time}** — {event}")
+        st.divider()
+
+# --- FOOTER WARNINGS ---
+if water < 3.5:
+    st.error("⚠️ CRITICAL: Low Hydration detected. Increase water to protect kidneys from high protein urea.")
 else:
-    st.success("✅ SYSTEM NOMINAL: You are crushing the 90kg goal.")
+    st.success("✅ System Nominal. Hydration levels supporting protein synthesis.")
