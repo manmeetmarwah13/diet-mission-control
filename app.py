@@ -42,7 +42,7 @@ nutrients = {
 }
 
 # --- HEADER ---
-st.title("🚀 WEIGHTLOSS JOURNEY")
+st.title("🚀 WEIGHT LOSS JOURNEY")
 st.divider()
 
 tab1, tab2, tab3 = st.tabs(["📊 NUTRIENT DASHBOARD", "🍱 MEAL VAULT", "🕒 TIME-STREAM"])
@@ -86,7 +86,7 @@ with tab1:
             st.progress(progress)
 
 with tab2:
-    st.subheader("🍱 Tactical Nutrition (Strict Vertical List)")
+    st.subheader("🍱 Tactical Nutrition")
     col_a, col_b = st.columns(2)
     
     with col_a:
