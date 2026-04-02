@@ -1,7 +1,7 @@
 import streamlit as st
 
 # --- SYSTEM CONFIG ---
-st.set_page_config(page_title="90KG Mission Control", page_icon="⚡", layout="wide")
+st.set_page_config(page_title="DIET PLAN", page_icon="⚡", layout="wide")
 
 # --- UI STYLING ---
 st.markdown("""
@@ -42,7 +42,7 @@ nutrients = {
 }
 
 # --- HEADER ---
-st.title("🚀 MISSION CONTROL: 114kg ➔ 90kg")
+st.title("🚀 WEIGHT LOSS JOURNEY")
 st.divider()
 
 tab1, tab2, tab3 = st.tabs(["📊 LIVE DASHBOARD", "🍱 MEAL VAULT", "🕒 TIME-STREAM"])
@@ -104,7 +104,7 @@ with tab1:
             st.progress(progress)
 
 with tab2:
-    st.subheader("🍱 Tactical Nutrition (Vertical List)")
+    st.subheader("🍱 Tactical Nutrition")
     col_a, col_b = st.columns(2)
     with col_a:
         with st.expander("🍎 FIRST MEAL (02:30 PM)"):
@@ -137,7 +137,7 @@ with tab2:
             st.info("Includes Good Monk Sachet #1 & #2")
 
 with tab3:
-    st.subheader("🕒 Daily Execution Timeline")
+    st.subheader("🕒 Timeline")
     timeline = [("01:00 PM", "Wake Up", 1.0), ("02:30 PM", "First Meal", 0.85), ("05:00 PM", "Tea/Coffee", 0.70), ("08:30 PM", "Pre-Meal", 0.50), ("09:00 PM", "Second Meal", 0.40), ("10:00 PM", "Vitamins & Minerals", 0.25), ("01:00 AM", "Fibre Intake", 0.10)]
     for time, event, prog in timeline:
         col_t, col_p = st.columns([1, 4])
