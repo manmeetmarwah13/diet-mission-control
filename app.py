@@ -1,120 +1,93 @@
 import streamlit as st
 import plotly.graph_objects as go
-from streamlit_lottie import st_lottie
-import requests
 
-# --- CONFIG & THEME ---
+# --- CONFIG ---
 st.set_page_config(page_title="Mission Control 90KG", page_icon="⚡", layout="wide")
 
-def load_lottieurl(url: str):
-    r = requests.get(url)
-    if r.status_code != 200:
-        return None
-    return r.json()
-
-# High-end Animations
-lottie_health = load_lottieurl("https://assets5.lottiefiles.com/packages/lf20_5njp3v83.json") # Heartbeat
-lottie_loading = load_lottieurl("https://assets1.apps.lottiefiles.com/datafiles/bZ97S67Xf0S6Z6G/data.json") # Processing
-
-# --- CUSTOM CSS FOR ANIMATIONS ---
+# --- STYLING ---
 st.markdown("""
     <style>
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    .stMetaData { animation: fadeIn 2s; }
     .main { background-color: #0e1117; }
-    div.stButton > button:first-child {
-        background-color: #00f2fe; color: black; border-radius: 20px;
-        transition: all 0.3s ease-in-out;
+    div[data-testid="stExpander"] { 
+        background-color: #161b22; 
+        border: 1px solid #30363d; 
+        border-radius: 10px;
     }
-    div.stButton > button:hover { transform: scale(1.05); background-color: #4facfe; }
+    .stMetric { background-color: #161b22; padding: 15px; border-radius: 10px; border: 1px solid #30363d; }
     </style>
     """, unsafe_allow_html=True)
 
-# --- HEADER SECTION ---
-with st.container():
-    left, right = st.columns([3, 1])
-    with left:
-        st.title("🚀 MISSION CONTROL: 114kg ➔ 90kg")
-        st.subheader("System Status: Peak Performance Mode")
-    with right:
-        st_lottie(lottie_health, height=100, key="heart")
+# --- HEADER ---
+st.title("🚀 MISSION CONTROL: 114kg ➔ 90kg")
+st.markdown("---")
 
-# --- INTERACTIVE DASHBOARD TABS ---
-tab1, tab2, tab3 = st.tabs(["📊 Live Metrics", "🍱 Meal Vault", "🕒 Time-Stream"])
+# --- TABS ---
+tab1, tab2, tab3 = st.tabs(["📊 LIVE DASHBOARD", "🍱 MEAL VAULT", "🕒 TIME-STREAM"])
 
 with tab1:
-    # Sidebar Logic moved to metrics
     st.sidebar.header("Telemetry Input")
     water = st.sidebar.slider("Water Intake (L)", 0.0, 5.0, 2.5)
-    
-    col1, col2, col3 = st.columns(3)
-    col1.metric("Current Deficit", "-1155 kcal", "🔥 Optimal")
-    col2.metric("Protein Saturation", "141g", "🎯 Goal Met")
-    col3.metric("Ketosis Level", "Moderate", "📈 Increasing")
+    steps = st.sidebar.number_input("Step Count", value=1000)
 
-    # Animated Chart
+    # Top Metrics
+    c1, c2, c3 = st.columns(3)
+    with c1: st.metric("Daily Calories", "1445 kcal", "-1155 vs TDEE")
+    with c2: st.metric("Protein Intake", "141g", "🎯 100%")
+    with c3: st.metric("Burn Status", "Fat Oxidation", "Active")
+
+    # Gauge Chart
     fig = go.Figure(go.Indicator(
         mode = "gauge+number",
         value = water,
-        title = {'text': "Hydration Status (Liters)"},
-        gauge = {'axis': {'range': [0, 5]}, 'bar': {'color': "#00f2fe"}}
+        domain = {'x': [0, 1], 'y': [0, 1]},
+        title = {'text': "Hydration (Liters)"},
+        gauge = {'axis': {'range': [None, 5]}, 'bar': {'color': "#00f2fe"}}
     ))
-    fig.update_layout(paper_bgcolor="#0e1117", font={'color': "white"}, height=300)
+    fig.update_layout(paper_bgcolor="rgba(0,0,0,0)", font={'color': "white", 'family': "Arial"}, height=300)
     st.plotly_chart(fig, use_container_width=True)
 
 with tab2:
-    st.write("### 🍱 Tactical Nutrition Breakdown")
-    st.write("Click each category to see the precise fuel components.")
+    st.subheader("🍱 Tactical Nutrition (Click to Expand)")
     
     with st.expander("🍎 LIGHT MEAL (2:30 PM)"):
-        st.write("""
-        * **1 Apple** (Medium)
-        * **1 Banana** (Medium)
-        * **5 Almonds** (Soaked preferred)
-        * **1 Walnut**
-        * **Supplement:** HK Multivitamin + Good Monk Sachet #1
-        """)
-        st.progress(20)
+        st.write("### Components:")
+        st.write("- 1 Apple (Fiber & Pectin)")
+        st.write("- 1 Banana (Potassium & Energy)")
+        st.write("- 5 Almonds + 1 Walnut (Brain Fats)")
+        st.info("💡 Tip: Eat the nuts first to slow down the sugar spike from the fruit.")
 
     with st.expander("🍗 MAIN LOAD (9:00 PM)"):
-        st.write("""
-        * **400g Chicken Breast** (Sauteed in 15g Amul Butter)
-        * **150g Amul Dahi** (Curd)
-        * **2 Egg Whites + 1 Whole Egg**
-        * **1 Cucumber** (Sliced)
-        * **1 Roti** (Whole Wheat)
-        * **Supplement:** 2x Omega-3 + Good Monk Sachet #2
-        """)
-        st.progress(85)
+        st.write("### Components:")
+        st.write("- 400g Chicken Breast (Sautéed in 15g Amul Butter)")
+        st.write("- 150g Amul Dahi (Probiotic base)")
+        st.write("- 2 Egg Whites + 1 Whole Egg")
+        st.write("- 1 Cucumber + 1 Roti")
+        st.success("💪 This meal provides ~110g of your total protein.")
 
-    with st.expander("🥦 ALT MAIN LOAD (Veggie Swap)"):
-        st.write("""
-        * **400g Chicken Breast** (15g Butter)
-        * **Sautéed Veggies** (Onion + Capsicum + Beans/Carrot)
-        * **50g Cauliflower** (5g Butter)
-        * **2 Egg Whites + 1 Whole Egg**
-        * **150g Amul Dahi**
-        """)
-        st.progress(75)
+    st.markdown("### 🧬 BIO-OPTIMIZATION (Good Monk 2x)")
+    # Pulling exactly from your uploaded label
+    b1, b2, b3 = st.columns(3)
+    b1.metric("Probiotics", "260 Crore", "Gut Health")
+    b2.metric("Ashwagandha", "135mg", "Cortisol Control")
+    b3.metric("Brahmi", "40mg", "Focus")
 
 with tab3:
-    st.write("### 🕒 The 1PM - 4AM Cycle")
-    # Using a professional vertical timeline aesthetic
-    items = [
-        ("1:00 PM", "🟢 System Wake & Hydrate"),
-        ("2:30 PM", "🍎 Light Fuel Intake"),
-        ("5:00 PM", "☕ Caffeine Spike (Iced Americano)"),
-        ("8:30 PM", "🛡️ Flax Seed Primer"),
-        ("9:00 PM", "🥩 Massive Protein Load"),
-        ("1:00 AM", "🧹 Digestive Sweep (Isabgol)"),
-        ("4:00 AM", "💤 Shutdown & Fat Oxidation")
-    ]
-    for time, event in items:
-        st.write(f"**{time}** — {event}")
-        st.divider()
+    st.subheader("🕒 The 1PM - 4AM Cycle")
+    schedule = {
+        "01:00 PM": "🟢 Wake Up + Hydrate",
+        "02:30 PM": "🍎 Light Meal",
+        "05:00 PM": "☕ Iced Americano",
+        "08:30 PM": "🛡️ Flax Seed Primer",
+        "09:00 PM": "🥩 Main Power Meal",
+        "01:00 AM": "🧹 Digestive Sweep (Isabgol)",
+        "04:00 AM": "💤 Repair Mode (Sleep)"
+    }
+    for time, event in schedule.items():
+        st.text(f"{time} | {event}")
+        st.progress(0) # Visual separator
 
-# --- FOOTER WARNINGS ---
+# --- ALERTS ---
 if water < 3.5:
-    st.error("⚠️ CRITICAL: Low Hydration detected. Increase water to protect kidneys from high protein urea.")
+    st.error(f"⚠️ DANGER: Water intake at {water}L. Increase to 4L to flush high-protein urea.")
 else:
-    st.success("✅ System Nominal. Hydration levels supporting protein synthesis.")
+    st.success("✅ System Nominal. Hydration levels optimized.")
