@@ -21,11 +21,11 @@ st.markdown("""
 # --- ADVANCED NUTRIENT ENGINE ---
 nutrients = {
     "Macronutrients": {
-        "Calories": {"current": 1625, "target": 2600, "unit": "kcal", "type": "intentional"},
+        "Calories": {"current": 1675, "target": 2600, "unit": "kcal", "type": "intentional"},
         "Protein": {"current": 141, "target": 140, "unit": "g", "type": "core"},
         "Fats": {"current": 60, "target": 70, "unit": "g", "type": "core"},
         "Carbs": {"current": 80, "target": 150, "unit": "g", "type": "intentional"},
-        "Fiber": {"current": 25, "target": 30, "unit": "g", "type": "core"},
+        "Fiber": {"current": 28, "target": 30, "unit": "g", "type": "core"},
         "Sodium": {"current": 800, "target": 2500, "unit": "mg", "type": "deficiency"}
     },
     "Micronutrients": {
@@ -37,7 +37,7 @@ nutrients = {
         "Iron": {"current": 11, "target": 18, "unit": "mg", "type": "conditional"},
         "Calcium": {"current": 800, "target": 1000, "unit": "mg", "type": "core"},
         "Zinc": {"current": 9, "target": 12, "unit": "mg", "type": "core"},
-        "Potassium": {"current": 3200, "target": 3500, "unit": "mg", "type": "core"},
+        "Potassium": {"current": 3400, "target": 3500, "unit": "mg", "type": "core"},
         "Magnesium": {"current": 250, "target": 400, "unit": "mg", "type": "deficiency"}
     }
 }
