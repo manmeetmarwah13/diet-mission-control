@@ -38,7 +38,7 @@ nutrients = {
         "Calcium": {"current": 800, "target": 1000, "unit": "mg", "type": "core"},
         "Zinc": {"current": 9, "target": 12, "unit": "mg", "type": "core"},
         "Potassium": {"current": 3400, "target": 3500, "unit": "mg", "type": "core"},
-        "Magnesium": {"current": 250, "target": 400, "unit": "mg", "type": "deficiency"}
+        "Magnesium": {"current": 450, "target": 450, "unit": "mg", "type": "core"}
     }
 }
 
