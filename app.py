@@ -15,7 +15,7 @@ def get_progress_html(current, limit):
     elif percent >= 50:
         color = "#8B8000" # 50% - 74%
     else:
-        color = "#8B0000" # Below 50%
+        color = "#880808" # Below 50%
     
     # Custom HTML Progress Bar
     return f"""
