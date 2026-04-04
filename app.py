@@ -72,6 +72,18 @@ with tab1:
                 st.caption("✅ Excellent")
             if name == "Vitamin C":
                 st.caption("✅ Excellent supports Iron absorption.")
+            if name == "Vitamin D":
+                st.caption("🚨 Corrective.")
+            if name == "Zinc":
+                st.caption("⚠️ Slight Gap.")
+            if name == "Potassium":
+                st.caption("⚠️ Deficit.")
+            if name == "Magnesium":
+                st.caption("Optimal.")
+            if name == "Vitamin B12":
+                st.caption("✅ Excellent")
+            if name == "Omega-3":
+                st.caption("☘️ Excellent")
             elif name == "Iron":
                 st.caption("⚠️ High but safe (diet-based)")
             elif name == "Calcium":
