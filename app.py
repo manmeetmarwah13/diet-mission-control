@@ -27,7 +27,7 @@ def get_progress_html(current, limit):
 # --- DATA SOURCE ---
 metrics = {
     "Nutrient": ["Calories", "Protein", "Carbs", "Fats", "Fiber", "Iron", "Zinc", "Vitamin D", "Magnesium", "Omega-3", "Vitamin C", "Calcium", "Potassium", "Vitamin B12"],
-    "Current": [1950, 140, 90, 70, 35, 32.0, 13.5, 8900, 300, 450, 120.0, 450.0, 1800, 3.5],
+    "Current": [1950, 140, 90, 70, 35, 32, 13.5, 8900, 300, 450, 120.0, 600, 1800, 3.5],
     "Limit": [2300, 140, 130, 80, 40, 19.0, 17, 2000, 500, 500, 80.0, 1000.0, 3500, 2.5],
     "Unit": ["kcal", "g", "g", "g", "g", "mg", "mg", "IU", "mg", "mg", "mg", "mg", "mg", "mcg"]
 }
@@ -64,12 +64,18 @@ with tab1:
             st.write(f"**{name}**: {curr} / {lim} {unit}")
             st.markdown(get_progress_html(curr, lim), unsafe_allow_html=True)
             
+            if name == "Protein":
+                st.caption("Optimal")
+            if name == "Carbs":
+                st.caption("Low (Fat Loss")
+            if name == "Fibre":
+                st.caption("✅ Excellent")
             if name == "Vitamin C":
-                st.caption("Avg consume")
+                st.caption("✅ Excellent supports Iron absorption.")
             elif name == "Iron":
                 st.caption("⚠️ High but safe (diet-based)")
             elif name == "Calcium":
-                st.caption("⚠️ Low")
+                st.caption("⚠️ 60% but Low")
             st.write("") 
 
 # --- TAB 2: THE MEAL VAULT ---
@@ -85,6 +91,8 @@ with tab2:
             st.write("• 1 Banana + 150g Papaya/Apple")
             st.write("• 5 Soaked Almonds + 1 Walnut")
             st.write("• **Supplement:** 1x HK Vitals Multivitamin Tablet")
+        with st.expander("5:00 PM - Coffee Break", expanded=True):
+            st.write("• 1 Cup Hot milk Coffee")
         with st.expander("9:00 PM - The Power Meal", expanded=True):
             st.write("• **MWF:** 400g Chicken + 300g Curd + 2 Egg Whites + 1 Whole Egg + 1 Cucumber + 1 Roti")
             st.write("• **TTS:** 400g Chicken + 300g Curd + 2 Egg Whites + 1 Whole Egg + 150g Cauliflower + 50g Beans + 50g Capsicum + 20g Onions (Sautéed)")
