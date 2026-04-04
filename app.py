@@ -3,92 +3,74 @@ import pandas as pd
 import json
 
 # --- DASHBOARD CONFIG ---
-st.set_page_config(page_title="Mission Control: Elite", layout="wide")
-st.title("🛡️ Mission Control: Optimized Protocol")
+st.set_page_config(page_title="Mission Control: Full Stack", layout="wide")
+st.title("🛡️ Mission Control: Consuming vs. Upper Limits")
 
-# --- DATA SOURCE: LATEST TARGETS ---
-TARGETS = {
-    "calories": 1950,
-    "protein": 140,
-    "carbs": 90,
-    "fats": 70,
-    "fiber": 35,
-    "water": 4.0,
-    "magnesium": 440,
-    "omega3": 1800
+# --- DATA SOURCE: EST. INTAKE VS TARGETS/LIMITS ---
+# Based on your latest nutrient analysis
+metrics = {
+    "Calories": {"current": 1950, "target": 2300, "unit": "kcal", "status": "Deficit (Loss)"},
+    "Protein": {"current": 141, "target": 140, "unit": "g", "status": "Optimal"},
+    "Carbs": {"current": 90, "target": 130, "unit": "g", "status": "Low (Fat Loss)"},
+    "Fats": {"current": 70, "target": 80, "unit": "g", "status": "Optimal"},
+    "Fiber": {"current": 38, "target": 40, "unit": "g", "status": "Excellent"},
+    "Iron": {"current": 34, "target": 19, "unit": "mg", "status": "High (Safe)"},
+    "Zinc": {"current": 13.5, "target": 17, "unit": "mg", "status": "Slight Gap"},
+    "Vitamin D": {"current": 8900, "target": 2000, "unit": "IU", "status": "Corrective"},
+    "Magnesium": {"current": 300, "target": 440, "unit": "mg", "status": "Filling Gap"},
+    "Omega-3": {"current": 1800, "target": 500, "unit": "mg", "status": "Therapeutic"}
 }
 
-# --- SIDEBAR: LIVE TRACKING ---
-st.sidebar.header("📊 Daily Input")
-calories = st.sidebar.number_input("Calories (kcal)", value=TARGETS["calories"])
-protein = st.sidebar.number_input("Protein (g)", value=TARGETS["protein"])
-carbs = st.sidebar.number_input("Carbs (g)", value=TARGETS["carbs"])
-fats = st.sidebar.number_input("Fats (g)", value=TARGETS["fats"])
-water = st.sidebar.slider("Water (L)", 0.0, 6.0, 4.0)
+# --- SECTION 1: SYSTEM DIAGNOSTICS (THE LIMITS) ---
+st.subheader("📊 Full Spectrum: Intake vs. Upper Limits")
 
-# --- SECTION 1: MACRO PERFORMANCE ---
-st.subheader("🚀 Live Dashboard: Core Macros")
-c1, c2, c3, c4 = st.columns(4)
-c1.metric("Calories", f"{calories} kcal", f"{calories - TARGETS['calories']} vs Target")
-c2.metric("Protein", f"{protein}g", "Optimal" if 135 <= protein <= 145 else "Adjust")
-c3.metric("Carbs", f"{carbs}g", "Fat Loss Zone")
-c4.metric("Water", f"{water}L", f"{round(water - TARGETS['water'], 1)}L")
+# Creating a comparison table for quick scanning
+df_data = []
+for nutrient, data in metrics.items():
+    df_data.append({
+        "Nutrient": nutrient,
+        "Current Consuming": f"{data['current']} {data['unit']}",
+        "Target/Limit": f"{data['target']} {data['unit']}",
+        "Status": data['status']
+    })
+
+st.table(pd.DataFrame(df_data))
 
 st.divider()
 
-# --- SECTION 2: THE MEAL VAULT (1 PM - 4 AM) ---
-st.subheader("🍱 The Meal Vault")
-tabs = st.tabs(["🕒 Schedule", "💊 Supplements", "🥗 Micronutrient Status"])
+# --- SECTION 2: LIVE CONSUMPTION TRACKER ---
+st.subheader("⚡ Live Input")
+col_input1, col_input2, col_input3 = st.columns(3)
 
-with tabs[0]:
-    st.info("**Fast Window:** 4 AM - 1 PM | **Feed Window:** 1 PM - 4 AM")
-    col_a, col_b = st.columns(2)
-    with col_a:
-        st.markdown("""
-        **1:00 PM: Metabolic Trigger**
-        - Functional Wake-up Water (500ml)
-        - *Rotation:* Jeera (M/Th) | Coriander (T/F)
-        
-        **2:00 PM: The Nutrient Break**
-        - 1 Medium Banana + 150g Papaya/Apple
-        - 5 Soaked Almonds + 1 Walnut
-        """)
-    with col_b:
-        st.markdown("""
-        **9:00 PM: The Power Meal**
-        - **MWF:** 400g Chicken (Iron Pan) + 300g Curd + 2 Eggs + Roti
-        - **TTS:** 400g Chicken + 300g Curd + Sautéed Veggie Medley
-        - *Total 2 tsp Desi Ghee*
-        """)
+with col_input1:
+    cur_cal = st.number_input("Calories In", value=metrics["Calories"]["current"])
+    cur_pro = st.number_input("Protein In (g)", value=metrics["Protein"]["current"])
+with col_input2:
+    cur_water = st.slider("Water Intake (L)", 0.0, 6.0, 4.0)
+    cur_mag = st.number_input("Magnesium (mg)", value=metrics["Magnesium"]["current"])
+with col_input3:
+    st.write("**Quick Checklist:**")
+    st.checkbox("1:00 PM Water/Jeera", value=True)
+    st.checkbox("9:00 PM Power Meal", value=True)
+    st.checkbox("3:45 AM Isabgol Cleanse")
 
-with tabs[1]:
-    st.success("Corrective & Maintenance Stack")
-    st.write("- **Morning:** 1x HK Vitals Multivitamin")
-    st.write("- **9:00 PM:** 2x Omega-3 (1.1g EPA/700mg DHA) + 2x Good Monk")
-    st.write("- **3:15 AM:** Magnesium Glycinate/Citrate (250-400mg)")
-    st.write("- **3:45 AM:** 1 Spoon Isabgol (Digestive Sweep)")
-
-with tabs[2]:
-    st.warning("Focus Areas")
-    st.progress(0.45, text="Calcium (Current: 450mg / Target: 1000mg)")
-    st.progress(0.51, text="Potassium (Current: 1800mg / Target: 3500mg)")
-    st.write("💡 *Tip: Increase leafy greens or coconut water to fix Potassium.*")
-
-# --- SECTION 3: SYNC & EXPORT ---
+# --- SECTION 3: VISUAL LIMIT GAUGES ---
 st.divider()
-sync_data = {
-    "calories": calories,
-    "protein": protein,
-    "carbs": carbs,
-    "fats": fats,
-    "water": water,
-    "magnesium": 300, # Estimated current supplement + diet
-    "timestamp": pd.Timestamp.now().strftime("%Y-%m-%d %H:%M")
-}
+st.subheader("🌡️ Performance Gauges")
+g1, g2, g3 = st.columns(3)
 
-st.download_button(
-    label="📲 Export to diet_sync.json",
-    data=json.dumps(sync_data),
-    file_name="diet_sync.json",
-    mime="application/json"
-)
+# Progress bars to show how close you are to the limit/target
+g1.write(f"**Protein Target ({metrics['Protein']['target']}g)**")
+g1.progress(min(cur_pro/metrics['Protein']['target'], 1.0), text=f"{cur_pro}g")
+
+g2.write(f"**Calorie Limit ({metrics['Calories']['target']} kcal)**")
+g2.progress(min(cur_cal/metrics['Calories']['target'], 1.0), text=f"{cur_cal} kcal")
+
+g3.write(f"**Magnesium Goal ({metrics['Magnesium']['target']}mg)**")
+g3.progress(min(cur_mag/metrics['Magnesium']['target'], 1.0), text=f"{cur_mag}mg")
+
+# --- SECTION 4: EXPORT ---
+st.divider()
+if st.button("🚀 Finalize & Export Sync File"):
+    sync_out = {"calories": cur_cal, "protein": cur_pro, "water": cur_water, "magnesium": cur_mag}
+    st.download_button("Download JSON", json.dumps(sync_out), "diet_sync.json")
