@@ -11,7 +11,7 @@ def get_progress_html(current, limit):
     if percent >= 100:
         color = "#1fd655" # 100%
     elif percent >= 75:
-        color = "#c0ff33" # 75% - 99%
+        color = "#9ACD32" # 75% - 99%
     elif percent >= 50:
         color = "#feff5c" # 50% - 74%
     else:
