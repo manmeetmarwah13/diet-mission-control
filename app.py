@@ -1,9 +1,28 @@
 import streamlit as st
 import pandas as pd
-import json
 
 # --- DASHBOARD CONFIG ---
 st.set_page_config(page_title="Mission Control", layout="wide")
+
+# --- CUSTOM COLOR FUNCTION ---
+def get_progress_html(current, limit):
+    percent = min(int((current / limit) * 100), 100)
+    # Applying your specific color logic
+    if percent >= 100:
+        color = "#1fd655" # 100%
+    elif percent >= 75:
+        color = "#c0ff33" # 75% - 99%
+    elif percent >= 50:
+        color = "#feff5c" # 50% - 74%
+    else:
+        color = "#fb4b4b" # Below 50%
+    
+    # Custom HTML Progress Bar
+    return f"""
+    <div style="width: 100%; background-color: #f0f2f6; border-radius: 5px; margin-bottom: 20px;">
+      <div style="width: {percent}%; background-color: {color}; height: 15px; border-radius: 5px; transition: width 0.5s ease;"></div>
+    </div>
+    """
 
 # --- DATA SOURCE ---
 metrics = {
@@ -21,7 +40,6 @@ tab1, tab2 = st.tabs(["📊 Live Dashboard", "🍱 The Meal Vault"])
 with tab1:
     st.title("🛡️ System Diagnostics")
     
-    # Section 1: Core Macro Progress (Top Row)
     st.subheader("🚀 Core Macro Progress")
     core_list = ["Calories", "Protein", "Carbs", "Fats", "Fiber"]
     cols = st.columns(len(core_list))
@@ -29,36 +47,30 @@ with tab1:
     for i, name in enumerate(core_list):
         row = df[df["Nutrient"] == name].iloc[0]
         curr, lim, unit = row["Current"], row["Limit"], row["Unit"]
-        progress = min(curr / lim, 1.0)
-        
         with cols[i]:
             st.write(f"**{name}**")
             st.write(f"{curr} / {lim} {unit}")
-            st.progress(progress)
+            st.markdown(get_progress_html(curr, lim), unsafe_allow_html=True)
 
     st.divider()
 
-    # Section 2: Full Spectrum Analysis
     st.subheader("🌡️ Full Spectrum: Consuming vs. Upper Limit")
     grid_cols = st.columns(2)
     
     for idx, row in df.iterrows():
         with grid_cols[idx % 2]:
             curr, lim, unit, name = row["Current"], row["Limit"], row["Unit"], row["Nutrient"]
-            progress = min(curr / lim, 1.0)
             
             st.write(f"**{name}**: {curr} / {lim} {unit}")
-            st.progress(progress)
+            st.markdown(get_progress_html(curr, lim), unsafe_allow_html=True)
             
-            # Custom Status Lines for specific nutrients
             if name == "Vitamin C":
                 st.caption("Avg consume")
             elif name == "Iron":
                 st.caption("⚠️ High but safe (diet-based)")
             elif name == "Calcium":
                 st.caption("⚠️ Low")
-            
-            st.write("") # Spacer
+            st.write("") 
 
 # --- TAB 2: THE MEAL VAULT ---
 with tab2:
