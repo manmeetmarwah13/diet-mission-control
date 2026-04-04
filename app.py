@@ -9,7 +9,7 @@ st.set_page_config(page_title="Mission Control", layout="wide")
 metrics = {
     "Nutrient": ["Calories", "Protein", "Carbs", "Fats", "Fiber", "Iron", "Zinc", "Vitamin D", "Magnesium", "Omega-3", "Vitamin C", "Calcium", "Potassium", "Vitamin B12"],
     "Current": [1950, 140, 90, 70, 35, 32, 13.5, 8900, 300, 450, 120, 450, 1800, 3.5],
-    "Limit": [2300, 140, 130, 80, 40, 19, 17, 2000, 440, 500, 80, 1000, 3500, 2.5],
+    "Limit": [2300, 140, 130, 80, 40, 19, 17, 2000, 500, 500, 80, 1000, 3500, 2.5],
     "Unit": ["kcal", "g", "g", "g", "g", "mg", "mg", "IU", "mg", "mg", "mg", "mg", "mg", "mcg"]
 }
 df = pd.DataFrame(metrics)
