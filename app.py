@@ -21,7 +21,7 @@ tab1, tab2 = st.tabs(["📊 Live Dashboard", "🍱 The Meal Vault"])
 with tab1:
     st.title("🛡️ System Diagnostics")
     
-    # Section 1: Progress Bars with "Current / Target" Labels
+    # Section 1: Core Macro Progress (Top Row)
     st.subheader("🚀 Core Macro Progress")
     core_list = ["Calories", "Protein", "Carbs", "Fats", "Fiber"]
     cols = st.columns(len(core_list))
@@ -32,39 +32,36 @@ with tab1:
         progress = min(curr / lim, 1.0)
         
         with cols[i]:
-            # Updated Label: Mentioning target explicitly (e.g., 141/140 g)
             st.write(f"**{name}**")
             st.write(f"{curr} / {lim} {unit}")
             st.progress(progress)
 
     st.divider()
 
-    # Section 2: Metric Card Representation (Image 2 & 3 Style)
-    st.subheader("🌡️ Full Spectrum Analysis")
+    # Section 2: Full Spectrum Analysis (All Nutrients with Progress Bars)
+    st.subheader("🌡️ Full Spectrum: Consuming vs. Upper Limit")
     
-    # Displaying all 10 nutrients as high-visibility cards
-    card_cols = st.columns(5) 
+    # Displaying all 10 nutrients as individual progress bars in a clean grid
+    grid_cols = st.columns(2) # Two columns of bars for better readability
+    
     for idx, row in df.iterrows():
-        col_idx = idx % 5
-        with card_cols[col_idx]:
-            delta_val = row["Current"] - row["Limit"]
-            # Color coding: Green if meeting/exceeding (for protein), 
-            # Red/Normal if exceeding a limit (for calories)
-            st.metric(
-                label=f"{row['Nutrient']} ({row['Unit']})",
-                value=f"{row['Current']} / {row['Limit']}",
-                delta=f"{round(delta_val, 1)} vs Target",
-                delta_color="normal"
-            )
+        # Alternate between the two columns
+        with grid_cols[idx % 2]:
+            curr, lim, unit, name = row["Current"], row["Limit"], row["Unit"], row["Nutrient"]
+            progress = min(curr / lim, 1.0)
+            
+            # Custom Label for the Full Spectrum Bars
+            st.write(f"**{name}**: {curr} / {lim} {unit}")
+            st.progress(progress)
+            st.write("") # Small spacer
 
-# --- TAB 2: THE MEAL VAULT (RESTORED) ---
+# --- TAB 2: THE MEAL VAULT ---
 with tab2:
     st.title("🍱 The Meal Vault & Daily Protocol")
     col_meal, col_night = st.columns(2)
     
     with col_meal:
         st.header("🕒 Feeding Schedule")
-        # Meal timing based on 1 PM to 4 AM protocol
         with st.expander("1:00 PM - Metabolic Trigger", expanded=True):
             st.write("• 500ml Water (Jeera/Coriander Rotation)")
         with st.expander("2:00 PM - The Nutrient Break", expanded=True):
@@ -72,7 +69,7 @@ with tab2:
             st.write("• 5 Soaked Almonds + 1 Walnut")
             st.write("• **Supp:** 1x HK Vitals Multivitamin")
         with st.expander("9:00 PM - The Power Meal", expanded=True):
-            st.write("• **MWF:** 400g Chicken + 300g Curd + 2 Eggs + Roti")
+            st.write("• **MWF:** 400g Chicken (Iron Pan) + 300g Curd + 2 Eggs + Roti")
             st.write("• **TTS:** 400g Chicken + 300g Curd + Sautéed Veggies")
             st.write("• **Supp:** 2x Omega-3 + 2x Good Monk")
 
