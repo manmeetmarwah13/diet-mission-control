@@ -8,8 +8,8 @@ st.set_page_config(page_title="Mission Control", layout="wide")
 # --- DATA SOURCE ---
 metrics = {
     "Nutrient": ["Calories", "Protein", "Carbs", "Fats", "Fiber", "Iron", "Zinc", "Vitamin D", "Magnesium", "Omega-3", "Vitamin C", "Calcium", "Potassium", "Vitamin B12"],
-    "Current": [1950, 140, 90, 70, 35, 32, 13.5, 8900, 300, 450, 120, 450, 1800, 3.5],
-    "Limit": [2300, 140, 130, 80, 40, 19, 17, 2000, 500, 500, 80, 1000, 3500, 2.5],
+    "Current": [1950, 140, 90, 70, 35, 32.0, 13.5, 8900, 300, 450, 120.0, 450.0, 1800, 3.5],
+    "Limit": [2300, 140, 130, 80, 40, 19.0, 17, 2000, 500, 500, 80.0, 1000.0, 3500, 2.5],
     "Unit": ["kcal", "g", "g", "g", "g", "mg", "mg", "IU", "mg", "mg", "mg", "mg", "mg", "mcg"]
 }
 df = pd.DataFrame(metrics)
@@ -38,22 +38,27 @@ with tab1:
 
     st.divider()
 
-    # Section 2: Full Spectrum Analysis (All Nutrients with Progress Bars)
+    # Section 2: Full Spectrum Analysis
     st.subheader("🌡️ Full Spectrum: Consuming vs. Upper Limit")
-    
-    # Displaying all 10 nutrients as individual progress bars in a clean grid
-    grid_cols = st.columns(2) # Two columns of bars for better readability
+    grid_cols = st.columns(2)
     
     for idx, row in df.iterrows():
-        # Alternate between the two columns
         with grid_cols[idx % 2]:
             curr, lim, unit, name = row["Current"], row["Limit"], row["Unit"], row["Nutrient"]
             progress = min(curr / lim, 1.0)
             
-            # Custom Label for the Full Spectrum Bars
             st.write(f"**{name}**: {curr} / {lim} {unit}")
             st.progress(progress)
-            st.write("") # Small spacer
+            
+            # Custom Status Lines for specific nutrients
+            if name == "Vitamin C":
+                st.caption("Avg consume")
+            elif name == "Iron":
+                st.caption("⚠️ High but safe (diet-based)")
+            elif name == "Calcium":
+                st.caption("⚠️ Low")
+            
+            st.write("") # Spacer
 
 # --- TAB 2: THE MEAL VAULT ---
 with tab2:
