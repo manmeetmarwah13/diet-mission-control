@@ -34,11 +34,11 @@ metrics = {
 df = pd.DataFrame(metrics)
 
 # --- NAVIGATION ---
-tab1, tab2 = st.tabs(["📊 Live Dashboard", "🍱 The Meal Vault"])
+tab1, tab2 = st.tabs(["📊 Dashboard", "🍱 Meal Vault"])
 
 # --- TAB 1: LIVE DASHBOARD ---
 with tab1:
-    st.title("🛡️ System Diagnostics")
+    st.title("🛡️ Body Diagnostics")
     
     st.subheader("🚀 Core Macro Progress")
     core_list = ["Calories", "Protein", "Carbs", "Fats", "Fiber"]
@@ -54,7 +54,7 @@ with tab1:
 
     st.divider()
 
-    st.subheader("🌡️ Full Spectrum: Consuming vs. Upper Limit")
+    st.subheader("🎯 Nutrient Progress Report")
     grid_cols = st.columns(2)
     
     for idx, row in df.iterrows():
@@ -78,21 +78,21 @@ with tab2:
     col_meal, col_night = st.columns(2)
     
     with col_meal:
-        st.header("🕒 Feeding Schedule")
+        st.header("🕒 Schedule")
         with st.expander("1:00 PM - Metabolic Trigger", expanded=True):
             st.write("• 500ml Water (Jeera/Coriander Rotation)")
         with st.expander("2:00 PM - The Nutrient Break", expanded=True):
             st.write("• 1 Banana + 150g Papaya/Apple")
             st.write("• 5 Soaked Almonds + 1 Walnut")
-            st.write("• **Supp:** 1x HK Vitals Multivitamin")
+            st.write("• **Supplement:** 1x HK Vitals Multivitamin Tablet")
         with st.expander("9:00 PM - The Power Meal", expanded=True):
-            st.write("• **MWF:** 400g Chicken (Iron Pan) + 300g Curd + 2 Eggs + Roti")
-            st.write("• **TTS:** 400g Chicken + 300g Curd + Sautéed Veggies")
-            st.write("• **Supp:** 2x Omega-3 + 2x Good Monk")
+            st.write("• **MWF:** 400g Chicken + 300g Curd + 2 Egg Whites + 1 Whole Egg + 1 Cucumber + 1 Roti")
+            st.write("• **TTS:** 400g Chicken + 300g Curd + 2 Egg Whites + 1 Whole Egg + 150g Cauliflower + 50g Beans + 50g Capsicum + 20g Onions (Sautéed)")
+            st.write("• **Supplements:** 2x Omega-3 + 2x Good Monk")
 
     with col_night:
         st.header("🌙 Nightly Protocol")
         with st.expander("3:15 AM - The Wind-Down", expanded=True):
-            st.write("• Magnesium Glycinate (250-400mg)")
+            st.write("• **Supplements:** Magnesium Glycinate")
         with st.expander("3:45 AM - Nightly Cleanse", expanded=True):
             st.write("• 1 Spoon Isabgol in 250ml Water")
